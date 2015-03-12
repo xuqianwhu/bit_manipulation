@@ -1,2 +1,2 @@
 # bit_manipulation
-bit manipulation
+bit manipulation algorithms

@@ -51,7 +51,7 @@ int isolateRightmostSet(int value)
 
 int isolateRightmostZero(int value)
 {
-    value = -value & (value+1);
+    value = ~value & (value+1);
     printValue(value, 8);
     printf(" IRMZ\n");
     return value;
@@ -59,7 +59,7 @@ int isolateRightmostZero(int value)
 
 int identifyTrailingZeros(int value)
 {
-    value = -value & (value - 1);
+    value = ~value & (value - 1);
     printValue(value, 8);
     printf(" ITZS\n");
     return value;

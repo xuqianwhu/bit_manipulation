@@ -22,19 +22,48 @@ int countingBits1(int value)
     return tmp;
 }
 
-int countingLeadingBits0(int value)
+int countingLeadingBits0_v1(int value)
 {
-     int n = 0;
-     unsigned int tmp = (unsigned int)value;
-     printf("\n");
-     printf("tmp %u ", tmp);
-     printValue(tmp, 32);
-     printf("\n\n");
+     int n;
+     unsigned int tmp;
 
-     if (tmp == 0)
+     if (value == 0)
      {
          return 32;
      }
+     else if (value < 0)
+     {
+         return 0;
+     }
+
+     n = 0;
+     tmp = (unsigned int)value;
+
+     if((tmp & 0xFFFF0000) == 0) {n = n + 16; tmp = tmp << 16;}
+     if((tmp & 0xFF000000) == 0) {n = n +  8; tmp = tmp <<  8;}
+     if((tmp & 0xF0000000) == 0) {n = n +  4; tmp = tmp <<  4;}
+     if((tmp & 0xC0000000) == 0) {n = n +  2; tmp = tmp <<  2;}
+     if((tmp & 0x80000000) == 0) {n = n +  1;}
+
+     return n;
+}
+
+int countingLeadingBits0_v2(int value)
+{
+     int n;
+     unsigned int tmp;
+
+     if (value == 0)
+     {
+         return 32;
+     }
+     else if (value < 0)
+     {
+         return 0;
+     }
+
+     n = 0;
+     tmp = (unsigned int)value;
 
      if(tmp <= 0x0000FFFF) {n = n + 16; tmp = tmp << 16;}
      if(tmp <= 0x00FFFFFF) {n = n +  8; tmp = tmp <<  8;}
@@ -45,17 +74,51 @@ int countingLeadingBits0(int value)
      return n;
 }
 
+int countingLeadingBits0_v3(int value)
+{
+     int n;
+     unsigned int tmp;
 
-int value = -3743;
+     if (value == 0)
+     {
+         return 32;
+     }
+     else if (value < 0)
+     {
+         return 0;
+     }
+
+     n = 0;
+     tmp = (unsigned int)value;
+
+     if(tmp >> 16 == 0) {n = n + 16; tmp = tmp << 16;}
+     if(tmp >> 24 == 0) {n = n +  8; tmp = tmp <<  8;}
+     if(tmp >> 28 == 0) {n = n +  4; tmp = tmp <<  4;}
+     if(tmp >> 30 == 0) {n = n +  2; tmp = tmp <<  2;}
+     //if(tmp >> 31 == 0) {n = n +  1;}
+     n = n + 1 - (tmp >> 31);
+
+     return n;
+}
+
+
+int value = 3743;
 
 
 void main()
 {
+    printf("\n");
     printf("There are %d bit 1 in value %#x %d ", countingBits1(value), value, value);
     printValue(value, 32);
-    printf("\n");
+    printf("\n\n");
 
-    printf("There are %d leading bits 0 in value %#x %d ", countingLeadingBits0(value), value, value);
+    printf("V1 There are %d leading bits 0 in value %#x %d ", countingLeadingBits0_v1(value), value, value);
     printValue(value, 32);
-    printf("\n");
+    printf("\n\n");
+    printf("V2 There are %d leading bits 0 in value %#x %d ", countingLeadingBits0_v2(value), value, value);
+    printValue(value, 32);
+    printf("\n\n");
+    printf("V3 There are %d leading bits 0 in value %#x %d ", countingLeadingBits0_v3(value), value, value);
+    printValue(value, 32);
+    printf("\n\n");
 }
